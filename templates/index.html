@@ -28,50 +28,55 @@
               <div class="collapse navbar-collapse" id="navbarsExample09">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="/profile">Profile</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
+                    <a class="nav-link" href="/signup">SignUp</a>
                   </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/signin">SignIn</a>
                   </li>
                 </ul>
-                <form role="search">
-                  <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                <form role="search" action="/search" method="post">
+                  <input class="form-control" type="search" name="searchQuery" placeholder="Search" aria-label="Search" >
                 </form>
               </div>
             </div>
           </nav>
 
 
-        <div class="row row-cols-1 row-cols-md-2 mb-3 text-center">
+        <div class="row row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
+            {% for movie in movies %}
             <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Free</h4>
+                <h4 class="my-0 fw-normal">{{ movie.Title }}</h4>
+                <h3 class="my-0 fw-normal">{{ movie.Year }}</h3>
                 </div>
                 <div class="card-body">
-                <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                    <li>10 users included</li>
-                    <li>2 GB of storage</li>
-                    <li>Email support</li>
-                    <li>Help center access</li>
-                </ul>
-                <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+                    <h3 class="my-0 fw-normal">{{ movie.Year }}</h3>
+                <h1 class="card-title pricing-card-title"><small class="text-muted fw-light">:</small></h1>
+                <ol class="list-unstyled mt-3 mb-4">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+                <ol class="list-unstyled mt-3 mb-4">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+                <button type="button" class="w-10 btn btn-lg btn-outline-primary">Add to fav list</button>
                 </div>
             </div>
             </div>
-            <div class="col">
+            {% endfor %}
+            <!-- <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                 <h4 class="my-0 fw-normal">Pro</h4>
@@ -104,8 +109,9 @@
                 <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
                 </div>
             </div>
-            </div>
+            </div> -->
         </div>
+    
     </div>
 
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
