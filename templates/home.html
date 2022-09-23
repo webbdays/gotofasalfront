@@ -11,7 +11,6 @@
 
 
 </head>
-
 <body class="d-flex h-100 text-center text-bg-dark">
 
 
@@ -35,10 +34,7 @@
                     <a class="nav-link" href="/user_profile">Profile</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/signup_page">SignUp</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/signin_page">SignIn</a>
+                    <a class="nav-link" href="/signout">SignOut</a>
                   </li>
                 </ul>
                 <form role="search" action="/search" method="post">
@@ -49,12 +45,40 @@
           </nav>
 
 
-<h1 style="text-align: center;padding-top: 15%;">Welcome to GotoFasal Movie Cards Website</h1>
-<h5 style="text-align: center;">...</h5>
-<h5 style="text-align: center;">List out your fav movies</h5>
-<h5 style="text-align: center;"><s>People can make them private or public</s></h5>
-<h5 style="text-align: center;">Its movie cards time</h5>
-<h5 style="text-align: center;">...</h5>
+        <div class="row row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
+            {% for movie in movies %}
+            <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                <h5 class="my-0 fw-normal">{{ movie.Title }}</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="my-0 fw-normal">Year: {{ movie.Year }}</h3>
+                    <h3 class="my-0 fw-normal">Director: {{ movie.Director }}</h3>
+                <h1 class="card-title pricing-card-title"><small class="text-muted fw-light">:</small></h1>
+                <ol class="list-unstyled mt-3 mb-4">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+                <ol class="list-unstyled mt-3 mb-4">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+                <form action="/favmovie" method="post">
+                <input class="form-control" name="user_email" placeholder="user_email" value="{{ user_email }}" hidden>
+                <input class="form-control" name="movie_name" placeholder="movie_name" value="{{ movie.Title }}" hidden>
+                <button onclick="window.location.href = '/home';" type="submit" class="btn btn-primary">Like</button>
+                </form>
+              </div>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+    
     </div>
 
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
