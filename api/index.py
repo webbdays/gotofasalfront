@@ -69,7 +69,6 @@ def signin_page():
 def signup():
     # get the submitted user registeration form from the body in the request
     registrationForm = dict(request.form)
-    print(registrationForm)
 
     # check if user already registered.
     check = userCollection.find_one({'email':registrationForm["email"]})
@@ -136,6 +135,7 @@ def performSearch():
         movies = res.json()["Search"] # list of movies details
     except:
         print("error")
+    print(movies)
     return render_template("home.html", movies=movies)
 
 @app.route("/user_profile", methods=["GET"])
@@ -197,15 +197,12 @@ def signout():
     token = request.cookies.get("token")
     try:
         dtoken = jwt.decode(token,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
-        print(dtoken)
         dtoken["exp"] = 0
         token = jwt.encode(dtoken, os.getenv("JWT_MAIN_SECRET"))
-        print(token)
 
         # redirect user to home page
         response = redirect("/home" )
         response.set_cookie(key="token", value=token, httponly=True)
-        print(response)
         return response
     except:
         return redirect("/signin")
