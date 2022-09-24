@@ -94,11 +94,6 @@ def signup():
 @app.route("/signin", methods=["POST"])
 def signin():
 
-    # check if user email is verified
-    verify = userCollection.find_one({"email":singinForm["email"]})
-    if not verify :
-        return render_template("email_verify.html")
-
     # autenticate user with the help of jwt
     token = request.cookies.get("token")
     try:
@@ -115,10 +110,10 @@ def signin():
     if not user :
         return render_template("userNotRegistered.html")
     
+    # check if user email is verified
     if not user["email_verify"] :
         return render_template("email_verify.html")
     
-
     # Authenicate user password witht the hash in the db
     if not bcrypt.checkpw(singinForm["password"].encode("utf-8"), user["password"]):
         return {"status": "Wrong password, try again"}
