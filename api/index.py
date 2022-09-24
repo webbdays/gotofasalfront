@@ -230,7 +230,7 @@ def signout():
 
 
 
-@app.route("/email_verify_page", methods=["POST"])
+@app.route("/email_verify_page", methods=["GET"])
 def email_verify_page():
     return render_template("email_verify.html")
 
