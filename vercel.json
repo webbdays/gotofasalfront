@@ -9,6 +9,6 @@
         }
     ],
     "routes": [
-        { "source": "/(.*)", "destination": "/src/index" }
+        { "src": "/(.*)", "des": "/src/index" }
     ]
 }
