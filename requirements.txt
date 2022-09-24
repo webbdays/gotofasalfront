@@ -1,0 +1,5 @@
+Flask
+requests
+bcrypt
+pymongo[srv]
+PyJWT[crypto]
