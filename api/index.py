@@ -8,6 +8,8 @@ import bcrypt
 import jwt
 import datetime
 
+# import custom modules
+from emailHandler import *
 
 app = Flask(__name__)
 
@@ -75,16 +77,28 @@ def signup():
     if check :
         return render_template("alreadyRegistered.html")
     
+
+    userdata = dict(registrationForm)
+    userdata["email_verify"] = False
+
     # hash the password and save the user details in db(mongodb).
     hashedPassword = bcrypt.hashpw(registrationForm["password"].encode("utf-8"), bcrypt.gensalt())
     registrationForm["password"] = hashedPassword
-    insertOneResult = userCollection.insert_one(registrationForm)
+    insertOneResult = userCollection.insert_one(userdata)
+    
+    verify_user_email_token_generator(registrationForm["email"])
 
     # redirect the user to signin page.
     return redirect("/signin_page")
 
 @app.route("/signin", methods=["POST"])
 def signin():
+
+    # check if user email is verified
+    verify = userCollection.find_one({"email":singinForm["email"]})
+    if not verify :
+        return render_template("email_verify.html")
+
     # autenticate user with the help of jwt
     token = request.cookies.get("token")
     try:
@@ -101,6 +115,10 @@ def signin():
     if not user :
         return render_template("userNotRegistered.html")
     
+    if not user["email_verify"] :
+        return render_template("email_verify.html")
+    
+
     # Authenicate user password witht the hash in the db
     if not bcrypt.checkpw(singinForm["password"].encode("utf-8"), user["password"]):
         return {"status": "Wrong password, try again"}
@@ -211,5 +229,13 @@ def signout():
         return redirect("/signin")
         
     return redirect("/")
-    
 
+@app.route("/email_verify", methods=["POST"])
+def email_verify():
+    email_verify_form = dict(request.form)
+    email_verify_token = email_verify_form["email_verify_token"]
+    try:
+        jwt.decode(email_verify_token, os.getenv("EMAIL_VERIFY_MAIN_SECRET"), algorithms=["HS256"])
+    except:
+        return redirect("/email_verify")
+    return redirect("/home")

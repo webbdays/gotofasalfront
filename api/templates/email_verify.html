@@ -1,0 +1,45 @@
+{% extends 'common.html' %}
+{% block content %}
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg bg-light rounded" aria-label="Eleventh navbar example">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/">Movie Cards</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+      
+              <div class="collapse navbar-collapse" id="navbarsExample09">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/user_profile">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/signup_page">SignUp</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/signin_page">SignIn</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+          <form action="/email_verify" method="post">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Email Verification Token</label>
+              <input type="password" class="form-control" name="email_verify_token" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Verify</button>
+          </form>
+    
+    </div>
+    {% endblock %}
