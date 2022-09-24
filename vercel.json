@@ -11,4 +11,5 @@
     "routes": [
         { "src": "/(.*)", "des": "/src/index" }
     ]
+    
 }

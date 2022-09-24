@@ -16,6 +16,7 @@ from emailHandler import *
 app = Flask(__name__)
 
 
+
 # connect to mongodb with the mongodb client
 mongoDBClient = MongoClient("mongodb+srv://Cluster0:" + os.getenv("MONGODB_PASSWORD") + "@cluster0.gxamoya.mongodb.net/?retryWrites=true&w=majority")
 gotofasalDB = mongoDBClient["gotofasal"]
