@@ -17,17 +17,23 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
-    function favmovie(movie_name, action) {
-        axios({
-            method:"post",
-            url:"/favmovie",
-            data : {
-                "movie_name":movie_name,
-                "action": action
-            }
+    async function favmovie(movie_name, action) {
+        favmovie_list_name = prompt("Please Enter the favmovieList name : ")
+        await axios.post("/favmovie",{
+            "favmovie_list_name":favmovie_list_name,
+            "movie_name":movie_name,
+            "action": action
         })
         .then(data=>console.log(data))
         .catch(err=>console.log(err))
+        if (action === "remove") {
+            // reload page
+            window.location.reload();
+        }
+
+        // alert user about action
+        alert(action + " action performed")
+        
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

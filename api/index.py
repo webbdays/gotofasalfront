@@ -170,7 +170,6 @@ def user_profile():
 
 @app.route("/favmovie", methods=["POST"])
 def favmovies():
-
     token = request.cookies.get("token")
     # verify the jwt token
     try:
@@ -183,7 +182,8 @@ def favmovies():
     user_name = dtoken["name"]
 
     fav_movies = []
-    data = dict(request.form)
+    data = dict(request.get_json())
+    
     fav_movies.append(data["movie_name"])
     if data["action"] == "add":
         userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$addToSet": {"fav_movies": {"$each": fav_movies}}}) 
