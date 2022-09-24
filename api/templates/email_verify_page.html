@@ -40,6 +40,18 @@
             </div>
             <button type="submit" class="btn btn-primary">Verify</button>
           </form>
+          <button onclick="generate_token()" type="submit" class="btn btn-primary">Generate Token</button>
     
     </div>
+
+
+    <script>
+      async function generate_token(){
+        axios.post("/generate_email",{
+          "generate":"yes"
+        })
+        .then(data=>console.log(data))
+        .catch(err=>console.log(err))
+      }
+    </script>
     {% endblock %}
