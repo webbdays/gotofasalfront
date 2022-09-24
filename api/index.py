@@ -115,7 +115,7 @@ def signin():
     
     # check if user email is verified
     if not user["email_verify"] :
-        return redirect("/emailverify_page")
+        return redirect("/email_verify_page")
     
     # Authenicate user password witht the hash in the db
     if not bcrypt.checkpw(singinForm["password"].encode("utf-8"), user["password"]):
