@@ -248,6 +248,7 @@ def email_verify():
 def generate_email_verify_token():
     data = dict(request.form)
 
+
     # check if user already exist.
     user = userCollection.find_one({"email":data["email"]})
     if not user :
