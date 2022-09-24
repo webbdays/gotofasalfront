@@ -172,7 +172,6 @@ def user_profile():
 def favmovies():
 
     token = request.cookies.get("token")
-    return {"status":"received"}
     # verify the jwt token
     try:
         dtoken = jwt.decode(token,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
@@ -182,7 +181,7 @@ def favmovies():
     #     return {"status":"provide proper jwt token or login again"}
     
     user_name = dtoken["name"]
-    
+
     fav_movies = []
     data = dict(request.form)
     fav_movies.append(data["movie_name"])
