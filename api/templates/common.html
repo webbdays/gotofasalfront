@@ -18,7 +18,7 @@
 
 <script>
     async function favmovie(movie_name, action) {
-        favmovie_list_name = prompt("Please Enter the favmovieList name : ")
+        favmovie_list_name = prompt("Please Enter the List name : ")
         await axios.post("/favmovie",{
             "favmovie_list_name":favmovie_list_name,
             "movie_name":movie_name,
@@ -27,13 +27,16 @@
         .then(data=>console.log(data))
         .catch(err=>console.log(err))
 
-
-        // alert user about action
-        alert(action + " action performed")
-
+        
         if (action === "remove") {
+            // alert user about action
+            alert(movie_name + "added to "+ favmovie_list_name + " list")
             // reload page
             window.location.reload();
+        }
+        else{
+            // alert user about action
+            alert(movie_name + "removed from "+ favmovie_list_name + " list")
         }
     }
 </script>
