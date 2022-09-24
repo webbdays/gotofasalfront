@@ -28,6 +28,6 @@ def verify_user_email_token_generator(user_email):
         print("verify token ")
         token = jwt.encode({"email":user_email, "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=5)}, os.getenv("EMAIL_VERIFY_MAIN_SECRET"))
         subject = "User Email Verification"
-        body = "Verification Token: " + token + "\nToken is valid for around 2 minutes."
+        body = "`Verification Token`: " + token + "\nToken is valid for around 2 minutes."
         send_email(sender, user_email, subject, body)
 

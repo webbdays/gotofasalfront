@@ -85,7 +85,9 @@ def signup():
 
     # hash the password and save the user details in db(mongodb).
     hashedPassword = bcrypt.hashpw(registrationForm["password"].encode("utf-8"), bcrypt.gensalt())
-    registrationForm["password"] = hashedPassword
+    
+    
+    userdata["password"]= hashedPassword
     insertOneResult1 = userCollection.insert_one(userdata)
     insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies":[]})
     
@@ -245,15 +247,15 @@ def email_verify():
     
     # save in db that user email is verified
     updateResult = userCollection.update_one({"email":email_verify_form["email"]}, {"$set":{"email_verify":True}})
-    
+
     return redirect("/home")
 
 @app.route("/generate_email_verify_token", methods=["POST"])
 def generate_email_verify_token():
     data = dict(request.form)
 
-
     # check if user already exist.
+
     user = userCollection.find_one({"email":data["email"]})
     if not user :
         return render_template("userNotRegistered.html")
