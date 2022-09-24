@@ -7,12 +7,13 @@ import os
 import bcrypt
 import jwt
 import datetime
-import sys
+
 
 # import custom modules
-sys.path.append("../pkg")
 from emailHandler import *
 
+
+# flask app
 app = Flask(__name__)
 
 
@@ -86,7 +87,8 @@ def signup():
     # hash the password and save the user details in db(mongodb).
     hashedPassword = bcrypt.hashpw(registrationForm["password"].encode("utf-8"), bcrypt.gensalt())
     registrationForm["password"] = hashedPassword
-    insertOneResult = userCollection.insert_one(userdata)
+    insertOneResult1 = userCollection.insert_one(userdata)
+    insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies":[]})
     
     verify_user_email_token_generator(registrationForm["email"])
 
