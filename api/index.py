@@ -254,4 +254,4 @@ def generate_email_verify_token():
         return render_template("userNotRegistered.html")
 
     verify_user_email_token_generator(data["email"])
-    return {"status":"Token Generated"}
+    return redirect("/email_verify_page")
