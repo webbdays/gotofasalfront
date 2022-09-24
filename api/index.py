@@ -7,8 +7,9 @@ import os
 import bcrypt
 import jwt
 import datetime
-
+import sys
 # import custom modules
+sys.path.append("../pkg")
 from emailHandler import *
 
 app = Flask(__name__)
