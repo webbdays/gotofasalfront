@@ -246,5 +246,12 @@ def email_verify():
 
 @app.route("/generate_email_verify_token", methods=["POST"])
 def generate_email_verify_token():
-    verify_user_email_token_generator(registrationForm["email"])
+    data = dict(request.form)
+
+    # check if user already exist.
+    user = userCollection.find_one({"email":data["email"]})
+    if not user :
+        return render_template("userNotRegistered.html")
+
+    verify_user_email_token_generator(data["email"])
     return {"status":"Token Generated"}
