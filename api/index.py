@@ -115,7 +115,7 @@ def signin():
     
     # check if user email is verified
     if not user["email_verify"] :
-        return redirect("/email_verify_page")
+        return redirect("/emailverify_page")
     
     # Authenicate user password witht the hash in the db
     if not bcrypt.checkpw(singinForm["password"].encode("utf-8"), user["password"]):
@@ -230,11 +230,11 @@ def signout():
 
 
 
-@app.route("/email_verify_page", methods=["GET"])
+@app.route("/emailverify_page", methods=["GET"])
 def email_verify_page():
     return render_template("email_verify_page.html")
 
-@app.route("/email_verify", methods=["POST"])
+@app.route("/emailverify", methods=["POST"])
 def email_verify():
     email_verify_form = dict(request.form)
     email_verify_token = email_verify_form["email_verify_token"]
