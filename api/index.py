@@ -169,7 +169,7 @@ def user_profile():
     return render_template("user_profile.html", user_name=user_name, user_fav_movies=user_fav_movies_details)
 
 @app.route("/favmovie", methods=["POST"])
-def add_to_favmovies():
+def favmovies():
 
     token = request.cookies.get("token")
     return {"status":"received"}
@@ -182,14 +182,18 @@ def add_to_favmovies():
     #     return {"status":"provide proper jwt token or login again"}
     
     user_name = dtoken["name"]
-
     
     fav_movies = []
     data = dict(request.form)
     fav_movies.append(data["movie_name"])
-    userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$addToSet": {"fav_movies": {"$each": fav_movies}}}) 
-    
-    return {"status": "your fav movie card received"}
+    if data["action"] == "add":
+        userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$addToSet": {"fav_movies": {"$each": fav_movies}}}) 
+    elif data["action"] == "remove":
+        userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$pull": {"fav_movies": {"$in": fav_movies}}})
+    else:
+        return {"status": "no action taken. Invalid input" }
+    return {"status": "action : "+ data["action"] + "permformed on user fav movies"}
+
 
 @app.route("/signout", methods=["GET"])
 def signout():
