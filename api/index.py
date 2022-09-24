@@ -230,17 +230,17 @@ def signout():
 
 
 
-@app.route("/emailverify_page", methods=["GET"])
+@app.route("/email_verify_page", methods=["GET"])
 def email_verify_page():
     return render_template("email_verify_page.html")
 
-@app.route("/emailverify", methods=["POST"])
+@app.route("/email_verify", methods=["POST"])
 def email_verify():
     email_verify_form = dict(request.form)
     email_verify_token = email_verify_form["email_verify_token"]
     try:
         jwt.decode(email_verify_token, os.getenv("EMAIL_VERIFY_MAIN_SECRET"), algorithms=["HS256"])
     except:
-        return redirect("/email_verify")
+        return redirect("/email_verify_page")
     return redirect("/home")
 
