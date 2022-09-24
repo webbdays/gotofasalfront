@@ -9,13 +9,11 @@ import jwt
 import datetime
 
 
-
 # import custom modules
 from emailHandler import *
 
 # flask app
 app = Flask(__name__)
-
 
 
 # connect to mongodb with the mongodb client
