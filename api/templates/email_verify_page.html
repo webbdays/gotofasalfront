@@ -40,18 +40,9 @@
             </div>
             <button type="submit" class="btn btn-primary">Verify</button>
           </form>
-          <button onclick="generate_token()" type="submit" class="btn btn-primary">Generate Token</button>
-    
+          <form action="/generate_email_verify_token" method="post">
+            <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+          <button  type="submit" class="btn btn-primary">Generate Token</button>
+          </form>
     </div>
-
-
-    <script>
-      async function generate_token(){
-        axios.post("/generate_email",{
-          "generate":"yes"
-        })
-        .then(data=>console.log(data))
-        .catch(err=>console.log(err))
-      }
-    </script>
     {% endblock %}

@@ -244,3 +244,7 @@ def email_verify():
         return redirect("/email_verify_page")
     return redirect("/home")
 
+@app.route("/generate_email_verify_token", methods=["POST"])
+def generate_email_verify_token():
+    verify_user_email_token_generator(registrationForm["email"])
+    return {"status":"Token Generated"}
