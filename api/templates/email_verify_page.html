@@ -27,6 +27,11 @@
               </div>
             </div>
           </nav>
+          <form action="/generate_email_verify_token" method="post">
+            <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+          <button  type="submit" class="btn btn-primary">Generate Token</button>
+          </form>
+          <h5>...</h5>
 
           <form action="/email_verify" method="post">
             <div class="form-group">
@@ -40,9 +45,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Verify</button>
           </form>
-          <form action="/generate_email_verify_token" method="post">
-            <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
-          <button  type="submit" class="btn btn-primary">Generate Token</button>
-          </form>
+          
     </div>
     {% endblock %}

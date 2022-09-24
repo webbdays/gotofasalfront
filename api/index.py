@@ -7,10 +7,11 @@ import os
 import bcrypt
 import jwt
 import datetime
+import asyncio
 
 
 # import custom modules
-from .emailHandler import *
+from emailHandler import *
 
 # flask app
 app = Flask(__name__)
@@ -51,15 +52,16 @@ def home():
     
     # some default movies
     defaultMovies = ["RRR", "Sarkaru Vaari Paata", "Bheemla Nayak", "Sita Ramam", "Radhe Shyam", "Acharya", "Major", "F3"]
-    movies = []
-    for movie in defaultMovies:
-        try:
-            url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
-            res = requests.request("GET", url=url )
-            movies.append(res.json())
-        except:
-            print("error")
-    return render_template("home.html", user_email=dtoken["email"], movies=movies)
+    moviesdata = []
+    # for movie in defaultMovies:
+    #     try:
+    #         url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
+    #         res = requests.request("GET", url=url )
+    #         moviesdata.append(res.json())
+    #     except:
+    #         print("error")
+    moviesdata = async_get_movies_data(defaultMovies)
+    return render_template("home.html", user_email=dtoken["email"], movies=moviesdata)
 
 @app.route("/signup_page", methods=["GET"])
 def signup_page():
@@ -146,15 +148,17 @@ def performSearch():
     # except:
     #     return {"status":"provide proper jwt token or login again"}
     
-    movies = []
+    searchmovies = []
     try:
         url = os.getenv("OMDB_URL")+ "?&apikey=" + os.getenv("OMDB_API_KEY") + "&s=" + request.form.get("searchQuery")
         res = requests.request("GET", url=url)
-        movies = res.json()["Search"] # list of movies details
+        searchmovies = [ movie["Title"] for movie in res.json()["Search"] ] # list of movies details
     except:
         print("error")
-    print(movies)
-    return render_template("home.html", movies=movies)
+
+    moviesdata = async_get_movies_data(searchmovies)
+
+    return render_template("home.html", movies=moviesdata)
 
 @app.route("/user_profile", methods=["GET"])
 def user_profile():
@@ -176,13 +180,14 @@ def user_profile():
 
     user_fav_movies_details = []
     if user_fav_movies_names :
-        for movie in user_fav_movies_names:
-            try:
-                url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
-                res = requests.request("GET", url=url )
-                user_fav_movies_details.append(res.json())
-            except:
-                print("error")
+        # for movie in user_fav_movies_names:
+        #     try:
+        #         url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
+        #         res = requests.request("GET", url=url )
+        #         user_fav_movies_details.append(res.json())
+        #     except:
+        #         print("error")
+        user_fav_movies_details = async_get_movies_data(user_fav_movies_names)
     
     return render_template("user_profile.html", user_name=user_name, user_fav_movies=user_fav_movies_details)
 
@@ -262,3 +267,28 @@ def generate_email_verify_token():
 
     verify_user_email_token_generator(data["email"])
     return redirect("/email_verify_page")
+
+
+
+
+
+
+
+# get movies in async manner.
+def async_get_movies_data(searchmovies):
+        urlprefix = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" 
+        
+        async def getmovie(movie):
+            try:
+                url =  urlprefix + movie
+                res = requests.request("GET", url=url )
+            except:
+                print("error")
+            
+            return res.json()
+        
+        async def getmoviesdata():
+            # return
+            return await asyncio.gather(*[getmovie(movie) for movie in searchmovies])
+        
+        return asyncio.run(getmoviesdata())
