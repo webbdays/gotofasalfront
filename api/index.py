@@ -230,6 +230,9 @@ def signout():
 
 
 
+@app.route("/email_verify_page", methods=["POST"])
+def email_verify_page():
+    return render_template("email_verify.html")
 
 @app.route("/email_verify", methods=["POST"])
 def email_verify():
@@ -241,6 +244,3 @@ def email_verify():
         return redirect("/email_verify")
     return redirect("/home")
 
-@app.route("/email_verify_page", methods=["GET"])
-def email_verify_page():
-    return render_template("email_verify.html")
