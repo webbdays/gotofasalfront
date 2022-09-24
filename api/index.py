@@ -242,6 +242,10 @@ def email_verify():
         jwt.decode(email_verify_token, os.getenv("EMAIL_VERIFY_MAIN_SECRET"), algorithms=["HS256"])
     except:
         return redirect("/email_verify_page")
+    
+    # save in db that user email is verified
+    updateResult = userCollection.update_one({"email":email_verify_form["email"]}, {"$set":{"email_verify":True}})
+    
     return redirect("/home")
 
 @app.route("/generate_email_verify_token", methods=["POST"])
