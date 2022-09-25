@@ -175,10 +175,14 @@ def user_profile():
     user_email = dtoken["email"]
     user_name = dtoken["name"]
 
-    fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":user_email})
-        
     listdetails = {}
     listsaccess = {}
+    
+    fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":user_email})
+    if not fav_movies_list_cursor :
+        return render_template("user_profile.html", user_name=user_name, listdetails=listdetails, listsaccess=listsaccess)
+        
+    
     for list in fav_movies_list_cursor:
         user_fav_movies_names = list["fav_movies"]
         if user_fav_movies_names :
