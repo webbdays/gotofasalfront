@@ -91,7 +91,7 @@ def signup():
     
     userdata["password"]= hashedPassword
     insertOneResult1 = userCollection.insert_one(userdata)
-    insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies_lists":[]})
+    # insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies_lists":[]})
     
     verify_user_email_token_generator(registrationForm["email"])
 
