@@ -17,26 +17,28 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
-    async function favmovie(movie_name, action) {
-        favmovie_list_name = prompt("Please Enter the List name : ")
+    async function favmovie(movie_name, action, favmovie_list_name) {
+        if (action === "add") {
+            favmovie_list_name = prompt("Please Enter the List name : ")
+        }
         await axios.post("/favmovie",{
             "favmovie_list_name":favmovie_list_name,
             "movie_name":movie_name,
             "action": action
         })
-        .then(data=>console.log(data))
-        .catch(err=>console.log(err))
+        .then(data=>{console.log(data); alert("Successful");})
+        .catch(err=>{console.log(err); alert("Un successful");})
 
 
         if (action === "remove") {
             // alert user about action
-            alert(movie_name + " removed from "+ favmovie_list_name + " list")
+            // alert(movie_name + " removed from "+ favmovie_list_name + " list")
             // reload page
             window.location.reload();
         }
         else{
             // alert user about action
-            alert(movie_name + " added to "+ favmovie_list_name + " list")
+            // alert(movie_name + " added to "+ favmovie_list_name + " list")
         }
     }
 </script>

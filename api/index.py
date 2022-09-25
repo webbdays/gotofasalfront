@@ -11,7 +11,7 @@ import asyncio
 
 
 # import custom modules
-from .emailHandler import *
+from emailHandler import *
 
 # flask app
 app = Flask(__name__)
@@ -91,7 +91,7 @@ def signup():
     
     userdata["password"]= hashedPassword
     insertOneResult1 = userCollection.insert_one(userdata)
-    insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies":[]})
+    insertOneResult2 = userfavmoviesCollection.insert_one({"user_email":userdata["email"],"fav_movies_lists":[]})
     
     verify_user_email_token_generator(registrationForm["email"])
 
@@ -164,7 +164,6 @@ def performSearch():
 def user_profile():
 
     token = request.cookies.get("token")
-
     # verify the jwt token
     try:
         dtoken = jwt.decode(token ,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
@@ -176,20 +175,62 @@ def user_profile():
     user_email = dtoken["email"]
     user_name = dtoken["name"]
 
-    user_fav_movies_names = userfavmoviesCollection.find_one({"user_email":user_email})["fav_movies"]
+    fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":user_email})
+        
+    listdetails = {}
+    listsaccess = {}
+    for list in fav_movies_list_cursor:
+        user_fav_movies_names = list["fav_movies"]
+        if user_fav_movies_names :
+            # for movie in user_fav_movies_names:
+            #     try:
+            #         url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
+            #         res = requests.request("GET", url=url )
+            #         user_fav_movies_details.append(res.json())
+            #     except:
+            #         print("error")
+            listdetails[list["fav_movies_list_name"]] = async_get_movies_data(user_fav_movies_names)
+            listsaccess[list["fav_movies_list_name"]] = list["access"]
+    print(listdetails)
+        
+    return render_template("user_profile.html", user_name=user_name, listdetails=listdetails, listsaccess=listsaccess)
 
-    user_fav_movies_details = []
-    if user_fav_movies_names :
-        # for movie in user_fav_movies_names:
-        #     try:
-        #         url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
-        #         res = requests.request("GET", url=url )
-        #         user_fav_movies_details.append(res.json())
-        #     except:
-        #         print("error")
-        user_fav_movies_details = async_get_movies_data(user_fav_movies_names)
+@app.route("/user_profile/<other_user_email>", methods=["GET"])
+def other_user_profile(other_user_email):
+
+    token = request.cookies.get("token")
+    # verify the jwt token
+    try:
+        dtoken = jwt.decode(token ,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
+    except : # jwt.ExpiredSignatureError:
+        return redirect("/signin_page")
+    # except:
+    #     return {"status":"provide proper jwt token or login again"}
     
-    return render_template("user_profile.html", user_name=user_name, user_fav_movies=user_fav_movies_details)
+    user_email = dtoken["email"]
+    user_name = dtoken["name"]
+
+    fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":other_user_email, "access": "public"})
+        
+    listdetails = {}
+    listsaccess = {}
+    for list in fav_movies_list_cursor:
+        user_fav_movies_names = list["fav_movies"]
+        if user_fav_movies_names :
+            # for movie in user_fav_movies_names:
+            #     try:
+            #         url = os.getenv("OMDB_URL") + "?&apikey=" + os.getenv("OMDB_API_KEY") + "&t=" + movie
+            #         res = requests.request("GET", url=url )
+            #         user_fav_movies_details.append(res.json())
+            #     except:
+            #         print("error")
+            listdetails[list["fav_movies_list_name"]] = async_get_movies_data(user_fav_movies_names)
+            listsaccess[list["fav_movies_list_name"]] = list["access"]
+    print(listdetails)
+        
+    return render_template("other_user_profile.html", listdetails=listdetails, listsaccess=listsaccess, other_user_email=other_user_email)
+
+
 
 @app.route("/favmovie", methods=["POST"])
 def favmovies():
@@ -204,14 +245,20 @@ def favmovies():
     
     user_name = dtoken["name"]
 
-    fav_movies = []
     data = dict(request.get_json())
-    
+    print(data)
+    fav_movies = []
     fav_movies.append(data["movie_name"])
+    print(fav_movies)
+    favmovie_list_name = data["favmovie_list_name"]
+
     if data["action"] == "add":
-        userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$addToSet": {"fav_movies": {"$each": fav_movies}}}) 
+        # userfavmovies = userfavmoviesCollection.insert_one({"user_email":dtoken["email"], "fav_movies_list_name":favmovie_list_name, "access":"private", "fav_movies":[]})
+        userfavmovies = userfavmoviesCollection.find_one_and_update({"user_email":dtoken["email"], "fav_movies_list_name":favmovie_list_name}, { "$addToSet" : { "fav_movies": {"$each": fav_movies}} })
+        if not userfavmovies :
+            userfavmovies = userfavmoviesCollection.insert_one({"user_email":dtoken["email"], "fav_movies_list_name":favmovie_list_name, "access":"private", "fav_movies":fav_movies})
     elif data["action"] == "remove":
-        userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"]}, {"$pull": {"fav_movies": {"$in": fav_movies}}})
+        userfavmovies = userfavmoviesCollection.update_one({"user_email":dtoken["email"], "fav_movies_list_name":favmovie_list_name}, {"$pull" : { "fav_movies": {"$in": fav_movies}} })
     else:
         return {"status": "no action taken. Invalid input" }
     return {"status": "action : "+ data["action"] + "permformed on user fav movies"}
@@ -270,6 +317,21 @@ def generate_email_verify_token():
 
 
 
+@app.route("/favmovieslistaccess", methods=["POST"])
+def favmovieslistaccess():
+
+    token = request.cookies.get("token")
+    # verify the jwt token
+    try:
+        dtoken = jwt.decode(token,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
+    except : # jwt.ExpiredSignatureError:
+        return redirect("/signin_page")
+    
+    data = dict(request.get_json())
+    favmovie_list_name = data["favmovie_list_name"]
+    userfavmovies = userfavmoviesCollection.find_one_and_update({"user_email":dtoken["email"], "fav_movies_list_name":favmovie_list_name}, { "$set" : { "access": data["access"]} })
+    if userfavmovies:
+        return {"status":f"List: {favmovie_list_name} is made {data['access']}"}
 
 
 
@@ -292,3 +354,6 @@ def async_get_movies_data(searchmovies):
             return await asyncio.gather(*[getmovie(movie) for movie in searchmovies])
         
         return asyncio.run(getmoviesdata())
+
+
+

@@ -2,7 +2,7 @@
 
 gotofasalfront is an open source code that makes it easy to search movies and collect the fav movie cards.
 
-[Movie Cards website](https://gotofasalfront.vercel.app/)
+Website Link: [Movie Cards website](https://gotofasalfront.vercel.app/)
 
 
 Licence: MIT
@@ -17,19 +17,31 @@ Licence: MIT
 * Grab the displayed url like for example (localhost:3000) and open in the browser and one can then see the website running there.
 
 #### Example Usage of the website
-* User need to register and login to perform movie search and for collecting fav cards
+* User need to register (verify their email) and login.
+* Loggined user can perform movie search and collect fav cards.
 * Users fav cards are displayed in the profile page.
 * Search functionality is based on the api from OMDB
 
 #### Tech stack
-* Programming languages Used: Python, Js, html, css
-* API is implemented via flask routes (I have initially thought of implementing the api in golang, here it is: https://github.com/webbdays/gotofasal)
-* Authentication: Email,Password. (Not secure right now. Need to analyse in deep of any security issues.)
+* Programming languages Used: Python,  JavaScript, HTML, little bit CSS
+* API is implemented via flask routes (But, I have initially implemented the api in golang, here it is: https://github.com/webbdays/gotofasal)
+* Authentication(Login): Using Email, Password. (Not sure whether its is secure or not right now. Need to analyse in deep for any security issues.)
 * For subsequent authentication after login, JWT tokens are used with expiry set to around 30 min as of now.
-* Auth packages used: bcrypt, pyjwt.
-* Database : Used Mongodb. To store user data like credentials and fav movies.
-* Host : Not yet Done. But currently able to host privately on gitpod.io workspace website. Will temp host there and get the public links for temp time.
+* Auth packages: Used bcrypt (for password hashing), pyjwt (for jwt token encoding and decoding).
+* Database : Used Mongodb. To store user data like credentials and fav movies. Reason: Seems obvious for website data that was being handled.
+* Host : Hosted on vercel. Website Link: [Movie Cards website](https://gotofasalfront.vercel.app/)
 * 
+
+
+### More details
+#### About search functionality
+* Used pythons asyncio module to make async requests to the OMDB api.
+* This helps in avoiding blockage of the python script to perform next request.
+* As a result webpage loads relatively fast.
+
+#### Thanks for OMDB movie collection api
+* Thanks for the api
+
 
 ### Contributing
 

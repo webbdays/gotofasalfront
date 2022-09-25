@@ -1,6 +1,6 @@
 {% extends 'common.html' %}
 {% block content %}
-<div class="container">
+    <div class="container">
 
         <nav class="navbar navbar-expand-lg bg-light rounded" aria-label="Eleventh navbar example">
             <div class="container-fluid">
@@ -27,15 +27,18 @@
               </div>
             </div>
           </nav>
-          <h1 style="text-align: center;padding-top: 2%;">Welcome to GotoFasal Movie Cards Website</h1>
+<h6 style="text-align: center;">Its movie cards time</h6>
 <h5 style="text-align: center;">...</h5>
-<h5 style="text-align: center;">List out your fav movies</h5>
-<h5 style="text-align: center;">People can now make them private or public</h5>
-<h5 style="text-align: center;">Its movie cards time</h5>
-<h5 style="text-align: center;">...</h5>
-          <h5 style="text-align: center;">...</h5>
-          <div class="row row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
-            {% for  movie in movies %}
+<h6 style="text-align: center;">Below are your fav movie cards of user: {{ other_user_email }}</h6>
+        <div class="col row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
+            {% for  list_name in listdetails.keys() %}
+            <div class="row">
+              <div>
+            <h4 class="">Fav List Name: {{ list_name }} </h4>
+                <h4 class=""><br>Access: {{ listsaccess[list_name]}}<hr></h4>
+              </div>
+
+            {% for movie in listdetails[list_name] %}
             <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
@@ -57,12 +60,14 @@
                     <li></li>
                     <li></li>
                 </ol>
-                <button onclick="favmovie('{{ movie.Title }}', 'add', '')" type="button" class="w-10 btn btn-lg btn-outline-primary">Add to fav list</button>
                 </div>
             </div>
             </div>
             {% endfor %}
+
+          </div>
+            {% endfor %}
         </div>
     
     </div>
-{% endblock %}
+    {% endblock %}

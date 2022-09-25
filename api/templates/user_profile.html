@@ -33,8 +33,20 @@
 <h6 style="text-align: center;">Its movie cards time</h6>
 <h5 style="text-align: center;">...</h5>
 <h6 style="text-align: center;">Below are your fav movie cards.</h6>
-        <div class="row row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
-            {% for  movie in user_fav_movies %}
+        <div class="col row-cols-1 row-cols-md-2 mb-3 text-center" style="padding: 20px;">
+            {% for  list_name in listdetails.keys() %}
+            <div class="row">
+              <div>
+            <h4 class="">Fav List Name: {{ list_name }} </h4>
+                <h4 class=""><br>Access: {{ listsaccess[list_name]}}<hr></h4>
+                {% if listsaccess[list_name] == "private" %}
+                <button onclick="favmovieslistaccess('{{ list_name }}', 'public')" type="button" class="w-10 btn btn-lg btn-outline-primary">Make Public</button>
+                {% elif listsaccess[list_name] == "public" %}
+                <button onclick="favmovieslistaccess('{{ list_name }}', 'private')" type="button" class="w-10 btn btn-lg btn-outline-primary">Make Private</button>
+                {% endif %}
+              </div>
+
+            {% for movie in listdetails[list_name] %}
             <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
@@ -56,12 +68,28 @@
                     <li></li>
                     <li></li>
                 </ol>
-                <button onclick="favmovie('{{ movie.Title }}','remove')" type="button" class="w-10 btn btn-lg btn-outline-primary">Remove from fav list</button>
+                <button onclick="favmovie('{{ movie.Title }}','remove', '{{ list_name }}')" type="button" class="w-10 btn btn-lg btn-outline-primary">Remove from fav list</button>
                 </div>
             </div>
             </div>
             {% endfor %}
+
+          </div>
+            {% endfor %}
         </div>
     
     </div>
+    <script>
+      async function favmovieslistaccess(list_name, access){
+        await axios.post("/favmovieslistaccess",
+          {
+            "favmovie_list_name":list_name,
+            "access": access
+          }
+        )
+        .then(data=>{console.log(data); alert("List: " + list_name + " access changed to "+ access); window.location.reload();})
+        .catch(err=>{console.log(data); alert("Un successful")})
+
+      }
+    </script>
     {% endblock %}
