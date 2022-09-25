@@ -11,7 +11,7 @@ import asyncio
 
 
 # import custom modules
-from .emailHandler import *
+from emailHandler import *
 
 # flask app
 app = Flask(__name__)
@@ -27,15 +27,15 @@ userfavmoviesCollection = gotofasalDB.userfavmovies
 @app.route("/", methods=["GET"])
 def index():
 
-    # autenticate user with the help of jwt
-    token = request.cookies.get("token")
+    # # autenticate user with the help of jwt
+    # token = request.cookies.get("token")
 
-    # verify the jwt token
-    try:
-        jwt.decode(token,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
-        return redirect("/home")
-    except:
-        print("err")
+    # # verify the jwt token
+    # try:
+    #     jwt.decode(token,os.getenv("JWT_MAIN_SECRET"), algorithms=["HS256"])
+    #     return redirect("/home")
+    # except:
+    #     print("err")
     
     return render_template("index.html")
 
@@ -179,7 +179,8 @@ def user_profile():
     listsaccess = {}
 
     fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":user_email})
-    if fav_movies_list_cursor :
+    
+    if not fav_movies_list_cursor :
         return render_template("user_profile.html", user_name=user_name, listdetails=listdetails, listsaccess=listsaccess)
         
     
