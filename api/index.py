@@ -11,7 +11,7 @@ import asyncio
 
 
 # import custom modules
-from emailHandler import *
+from .emailHandler import *
 
 # flask app
 app = Flask(__name__)
