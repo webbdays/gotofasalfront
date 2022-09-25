@@ -177,9 +177,9 @@ def user_profile():
 
     listdetails = {}
     listsaccess = {}
-    
+
     fav_movies_list_cursor = userfavmoviesCollection.find({"user_email":user_email})
-    if not fav_movies_list_cursor :
+    if fav_movies_list_cursor :
         return render_template("user_profile.html", user_name=user_name, listdetails=listdetails, listsaccess=listsaccess)
         
     
